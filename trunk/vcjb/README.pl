@@ -15,3 +15,7 @@ Instalacja:
 * Uruchom program: python vcjb.py
 
 Wszystkie dostêpne komendy administracyjne wypisane s± w pliku COMMANDS.
+
+Kontakt:
+JID: pete@chrome.pl
+email: petecky@users.berlios.de
