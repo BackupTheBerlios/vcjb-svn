@@ -24,7 +24,7 @@ import sys
 from vcjb import publish
 if len(sys.argv) == 3:
     base_dir=sys.path[0]
-    publish.publish(base_dir, 'pub.cfg', sys.argv[1], sys.argv[2])
+    publish.publish(base_dir, sys.argv[1], sys.argv[2])
     
 else:
     print 'Usage: python ' + sys.argv[0] + ' repository \'log info\''

@@ -23,11 +23,11 @@ class publishApplication(jabber.Client):
         cfg.read(config_file)
         self.jid = JID(cfg.get('LOGIN', 'USER'),
                        cfg.get('LOGIN', 'HOST'),
-                       cfg.get('LOGIN', 'RESOURCE')
+                       'publish'
                       )
         self.vcjb_jid = JID(cfg.get('LOGIN', 'USER'),
                        cfg.get('LOGIN', 'HOST'),
-                       cfg.get('LOGIN', 'VCJB_RESOURCE')
+                       cfg.get('LOGIN', 'RESOURCE')
                       )
         self.password = unicode(cfg.get('LOGIN', 'PASS'), 'iso-8859-2')
         self.auth_methods = string.split(cfg.get('LOGIN', 'AUTH_METHODS'))
@@ -72,13 +72,13 @@ class publishApplication(jabber.Client):
            ))
         self.stream.disconnect()
         
-def publish(base_dir, pub_cfg, pub_repo, pub_msg):
+def publish(base_dir, pub_repo, pub_msg):
     """
     Run the publish application.
     """ 
     libxml2.debugMemory(1)
     
-    app = publishApplication(base_dir, pub_cfg, pub_repo, pub_msg)
+    app = publishApplication(base_dir, 'vcjb.cfg', pub_repo, pub_msg)
     
     app.run()
     
