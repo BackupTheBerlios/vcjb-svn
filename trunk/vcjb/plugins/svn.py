@@ -159,57 +159,57 @@ class Plugin(PluginBase):
             (stanza.get_from(), stanza.get_body())
            )
         
-        komenda = string.split(stanza.get_body(), ' ')
+        command = string.split(stanza.get_body(), ' ')
         try:
-            if (komenda[0] == "svn"):
+            if (command[0] == "svn"):
                 target = JID(stanza.get_from())
-                if (komenda[1] == "log"):
-                    dane = unicode(self.get_version_log(komenda), 'iso-8859-2')
+                if (command[1] == "log"):
+                    dane = unicode(self.get_version_log(command), 'iso-8859-2')
                     
-                elif (komenda[1] == "info"):
-                    dane = self.get_info(komenda)
+                elif (command[1] == "info"):
+                    dane = self.get_info(command)
                     
-                elif (komenda[1] == "del" and len(komenda) == 3):
-                    dane = self.delete_repository(komenda)
+                elif (command[1] == "del" and len(command) == 3):
+                    dane = self.delete_repository(command)
                     
-                elif (komenda[1] == "add" and len(komenda) == 4):
-                    dane = self.add_repository(komenda, stanza)
+                elif (command[1] == "add" and len(command) == 4):
+                    dane = self.add_repository(command, stanza)
                         
-                elif (komenda[1] == "modify"):
-                    dane = self.modify_repository(komenda)
+                elif (command[1] == "modify"):
+                    dane = self.modify_repository(command)
                     
                 self.app.stream.send(Message(to=target, body=dane))
                     
         except (KeyError):
             target = JID(stanza.get_from())
-            dane = u"Ther's no repository called " + komenda[2]
+            dane = u"Ther's no repository called " + command[2]
             self.app.stream.send(Message(to=target, body=dane))
     
-    def get_version_log(self, komenda):
+    def get_version_log(self, command):
         """
         Parse command and return version's log message.
         """
-        if (len(komenda) > 3):
-            command = 'svn log -v -r ' + komenda[3] + ' '\
-                + self.repos_url[komenda[2]]
+        if (len(command) > 3):
+            command = 'svn log -v -r ' + command[3] + ' '\
+                + self.repos_url[command[2]]
         else:
             command = 'svn log -v -r HEAD '\
-                + self.repos_url[komenda[2]]
+                + self.repos_url[command[2]]
 
         results = os.popen(command)
         dane = results.read()
         results.close()
         return dane
         
-    def get_info(self, komenda):
+    def get_info(self, command):
         """
         Return info about repositories.
         """ 
-        if (len(komenda) > 2):
-            dane = u"Repository: " + komenda[2] + u"\nURL: " \
-                + unicode(self.repos_url[komenda[2]]) \
+        if (len(command) > 2):
+            dane = u"Repository: " + command[2] + u"\nURL: " \
+                + unicode(self.repos_url[command[2]]) \
                 + u"\nUSERS: " \
-                + unicode(string.join(self.users[komenda[2]], \
+                + unicode(string.join(self.users[command[2]], \
                     u"; "))
         else:
             dane = "Repositories: " + \
@@ -217,118 +217,118 @@ class Plugin(PluginBase):
             dane = unicode(dane, 'iso-8859-2')
         return dane
     
-    def delete_repository(self, komenda):
+    def delete_repository(self, command):
         """
         Delete repository from check list.
         """ 
         if (len(self.repos) > 1 
             and 
-            self.repos_url[komenda[2]] != ""
+            self.repos_url[command[2]] != ""
            ):
             self.cfg.set('SVN', 
                 'REPOS', 
-                string.replace(self.cfg.get('SVN', 'REPOS'), komenda[2], ''))
-            self.cfg.remove_section(komenda[2])
+                string.replace(self.cfg.get('SVN', 'REPOS'), command[2], ''))
+            self.cfg.remove_section(command[2])
             self.save_cfg()
             self.read_cfg()
-            dane = u"Repository " + komenda[2] + u" succesfully deleted"
+            dane = u"Repository " + command[2] + u" succesfully deleted"
             self.app.reload_plugin('svn')
         else:
             dane = u"You can't remove the last tepository"
         
         return dane
                         
-    def add_repository(self, komenda, stanza):
+    def add_repository(self, command, stanza):
         """
         Add repository to check list.
         """ 
         if (not self.cfg.has_option('SVN', 'REPOS') 
             or
             string.find(self.cfg.get('SVN', 'REPOS'), 
-                komenda[2]) == -1
+                command[2]) == -1
            ):
             if (self.cfg.has_option('SVN', 'REPOS')):
                 self.cfg.set(
                     'SVN', 
                     'REPOS', 
-                    self.cfg.get('SVN', 'REPOS') + ' ' + komenda[2]
+                    self.cfg.get('SVN', 'REPOS') + ' ' + command[2]
                    )
             else:
                 self.cfg.set(
                     'SVN', 
                     'REPOS', 
-                    komenda[2]
+                    command[2]
                    )
-            self.cfg.add_section(komenda[2])
-            self.cfg.set(komenda[2], 'URL', komenda[3])
+            self.cfg.add_section(command[2])
+            self.cfg.set(command[2], 'URL', command[3])
             self.cfg.set(
-                komenda[2], 
+                command[2], 
                 'USERS', 
                 stanza.get_from().bare()
                )
             self.save_cfg()
             self.read_cfg()
-            dane = u"Repository: " + komenda[2] + \
+            dane = u"Repository: " + command[2] + \
                 u" succesfully added"
             self.app.reload_plugin('svn')
         else:
-            dane = u"Repository: " + komenda[2] + u" already added"
+            dane = u"Repository: " + command[2] + u" already added"
         
         return dane            
     
-    def modify_repository(self, komenda):
+    def modify_repository(self, command):
         """
         Modify repository information.
         """ 
-        if (len(komenda) == 5 and komenda[3] == "add"):
+        if (len(command) == 5 and command[3] == "add"):
             if (string.find(
-                    self.cfg.get(komenda[2], 'USERS'), 
-                    komenda[4]
+                    self.cfg.get(command[2], 'USERS'), 
+                    command[4]
                    ) == -1
                ):
                 self.cfg.set(
-                    komenda[2], 
+                    command[2], 
                     'USERS', 
-                    self.cfg.get(komenda[2], 'USERS') + ' ' + \
-                        komenda[4]
+                    self.cfg.get(command[2], 'USERS') + ' ' + \
+                        command[4]
                    )
                 self.save_cfg()
                 self.read_cfg()
-                dane = u"User: " + komenda[4] + \
-                    u" added to repository " + komenda[2]
+                dane = u"User: " + command[4] + \
+                    u" added to repository " + command[2]
             else:
-                dane = u"User: " + komenda[4] + \
-                    u" already added to repository " + komenda[2]
+                dane = u"User: " + command[4] + \
+                    u" already added to repository " + command[2]
         
-        elif (len(komenda) == 5 and komenda[3] == "del"):
+        elif (len(command) == 5 and command[3] == "del"):
             if (string.find(
-                    self.cfg.get(komenda[2], 'USERS'),
-                    komenda[4]
+                    self.cfg.get(command[2], 'USERS'),
+                    command[4]
                    ) != -1
                ):
-                if (len(self.users[komenda[2]]) > 1 ):
+                if (len(self.users[command[2]]) > 1 ):
                     self.cfg.set(
-                        komenda[2], 
+                        command[2], 
                         'USERS', 
                         string.replace(
-                            self.cfg.get(komenda[2], 'USERS'),
-                            komenda[4],
+                            self.cfg.get(command[2], 'USERS'),
+                            command[4],
                             ''
                            )
                        )
                     self.save_cfg()
                     self.read_cfg()
-                    dane = u"User: " + komenda[4] + \
-                        u" deleted from repository " + komenda[2]
+                    dane = u"User: " + command[4] + \
+                        u" deleted from repository " + command[2]
                 else:
                     dane = u"You can't remove the last user " + \
                         "from repository"
             else:
-                dane = u"Ther's no user " + komenda[4] + \
-                    u" in repository " + komenda[2]
+                dane = u"Ther's no user " + command[4] + \
+                    u" in repository " + command[2]
         
-        elif (len(komenda) == 5 and komenda[3] == "url"):
-            self.cfg.set(komenda[2], 'URL', komenda[4])
+        elif (len(command) == 5 and command[3] == "url"):
+            self.cfg.set(command[2], 'URL', command[4])
             self.save_cfg()
             self.read_cfg()
             dane = u"Done"

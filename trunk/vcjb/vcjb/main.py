@@ -218,23 +218,23 @@ class Application(jabber.Client):
                     )
                     process = False
             if process:
-                komenda = string.split(stanza.get_body(), ' ')
+                command = string.split(stanza.get_body(), ' ')
                 target = JID(stanza.get_from())
-                if (komenda[0] == "down"):
+                if (command[0] == "down"):
                     self.exit()
-                elif (komenda[0] == "unload"):
-                    if (komenda[1] == "plugin"):
-                        plugin = komenda[2]
+                elif (command[0] == "unload"):
+                    if (command[1] == "plugin"):
+                        plugin = command[2]
                         self.unload_plugin(plugin)
                         msg = 'plugin ' + plugin + ' successfully unloaded' 
                         self.stream.send(Message(to=target, body=msg))
-                elif (komenda[0] == "reload"):
-                    if (komenda[1] == "plugin"):
-                        plugin = komenda[2]
+                elif (command[0] == "reload"):
+                    if (command[1] == "plugin"):
+                        plugin = command[2]
                         self.reload_plugin(plugin)
                         msg = 'plugin ' + plugin + ' successfully reloaded' 
                         self.stream.send(Message(to=target, body=msg))
-                    elif (komenda[1] == "config"):
+                    elif (command[1] == "config"):
                         self.read_cfg()
                         self.stream.send(Message(to=target, body=u'config reloaded'))
                         for plugin in self.plugins.values():
@@ -244,9 +244,9 @@ class Application(jabber.Client):
                                 self.print_exception()
                                 self.info("Plugin call failed")
 
-                elif (komenda[0] == "load"):
-                    if (komenda[1] == "plugin"):
-                        plugin = komenda[2]
+                elif (command[0] == "load"):
+                    if (command[1] == "plugin"):
+                        plugin = command[2]
                         self.load_plugin(plugin)
                         self.get_plugin(plugin).session_started(self.stream)
                         msg = 'plugin ' + plugin + ' successfully loaded' 
