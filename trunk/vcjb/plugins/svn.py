@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """ Plugin for Subversion """ 
-__revision__ = "$Revision: $"
+__revision__ = "$Rev$"
 
 import threading
 import datetime
