@@ -18,6 +18,7 @@ class Application(jabber.Client):
         """ Initialize the application. """
         self.configFile = config_file
         self.show_debug = None
+        self.show_info = None
         self.admin = None
         self.jid = None
         self.password = None
@@ -82,7 +83,7 @@ class Application(jabber.Client):
                 mod = reload(mod)
             else:
                 mod = __import__(name)
-            plugin = mod.Plugin(self)
+            plugin = mod.Plugin(self, name)
             plugin.module = mod
             plugin.sys_path = sys.path
             self.plugins[name] = plugin
@@ -236,7 +237,8 @@ class Application(jabber.Client):
                         self.stream.send(Message(to=target, body=msg))
                     elif (command[1] == "config"):
                         self.read_cfg()
-                        self.stream.send(Message(to=target, body=u'config reloaded'))
+                        self.stream.send(Message(to=target, 
+                            body=u'config reloaded'))
                         for plugin in self.plugins.values():
                             try:
                                 plugin.read_cfg()
