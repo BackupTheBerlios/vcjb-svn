@@ -1,0 +1,16 @@
+About:
+This is a smiple Jabber bot that checking Version Controll system for new 
+revisions and sending log info by jabber.
+In this time VCJB is serving only SVN repositories, but everyone may create 
+plugin for other Version Controll systems.
+
+Requirements:
+Python 2.3 (http://www.python.org)
+PyXMPP  (http://pyxmpp.jabberstudio.org)
+
+Instalation: 
+* Create jabber account for vcjb
+* Modify vcjb.cfg file
+* Run it: python vcjb.py
+
+For available admin commands look at COMMANDS file

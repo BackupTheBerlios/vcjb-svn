@@ -1,0 +1,19 @@
+Available commands:
+
+down
+reload config
+
+unload plugin pluginname
+reload plugin pluginname
+load plugin pluginname
+
+SVN
+
+svn log repo_name [revision_number]
+svn info
+svn info repo_name
+svn modify repo_name add user_name 
+svn modify repo_name url new_url
+svn modify repo_name del user_name 
+svn del repo_name
+svn add repo_name url

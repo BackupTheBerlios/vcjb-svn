@@ -1,0 +1,11 @@
+[BASE]
+SHOW_DEBUG = 1
+SHOW_INFO = 1
+ADMIN = pete@chrome.pl
+
+[LOGIN]
+HOST = chrome.pl
+USER = vcjb
+PASS = aaa
+RESOURCE = vcjb
+AUTH_METHODS = sasl:DIGEST-MD5 digest
