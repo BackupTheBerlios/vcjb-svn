@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ main application source """ 
-__revision__ = "$Revision: $"
+__revision__ = "$Rev$"
 
 
 import ConfigParser

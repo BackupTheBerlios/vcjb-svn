@@ -18,7 +18,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
 
-__revision__ = "$Revision: $"
+__revision__ = "$Rev$"
 
 import sys
 from vcjb import main

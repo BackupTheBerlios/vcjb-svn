@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """ core plugin support """
-__revision__ = "$Revision: $"
+__revision__ = "$Rev$"
 
 class PluginBase:
     """ base class for plugins """
