@@ -212,47 +212,48 @@ class Application(jabber.Client):
         if (stanza.get_from().bare().as_utf8() == self.admin):
             process = True
             message_delay = delay.get_delay(stanza)
-            if (message_delay):
-                if (message_delay.reason == "Offline Storage"):
-                    self.info("Ingnoring offline message from " + \
-                        message_delay.fr.as_string() + ": " + stanza.get_body()
-                    )
-                    process = False
+            if (message_delay 
+                and
+                message_delay.reason == "Offline Storage"
+               ):
+                self.info("Ingnoring offline message from " + \
+                    message_delay.fr.as_string() + ": " + stanza.get_body()
+                   )
+                process = False
             if process:
                 command = string.split(stanza.get_body(), ' ')
                 target = JID(stanza.get_from())
                 if (command[0] == "down"):
                     self.exit()
-                elif (command[0] == "unload"):
-                    if (command[1] == "plugin"):
-                        plugin = command[2]
-                        self.unload_plugin(plugin)
-                        msg = 'plugin ' + plugin + ' successfully unloaded' 
-                        self.stream.send(Message(to=target, body=msg))
-                elif (command[0] == "reload"):
-                    if (command[1] == "plugin"):
-                        plugin = command[2]
-                        self.reload_plugin(plugin)
-                        msg = 'plugin ' + plugin + ' successfully reloaded' 
-                        self.stream.send(Message(to=target, body=msg))
-                    elif (command[1] == "config"):
-                        self.read_cfg()
-                        self.stream.send(Message(to=target, 
-                            body=u'config reloaded'))
-                        for plugin in self.plugins.values():
-                            try:
-                                plugin.read_cfg()
-                            except StandardError:
-                                self.print_exception()
-                                self.info("Plugin call failed")
-
-                elif (command[0] == "load"):
-                    if (command[1] == "plugin"):
-                        plugin = command[2]
-                        self.load_plugin(plugin)
-                        self.get_plugin(plugin).session_started(self.stream)
-                        msg = 'plugin ' + plugin + ' successfully loaded' 
-                        self.stream.send(Message(to=target, body=msg))
+                elif (command[0] == "unload" and command[1] == "plugin"):
+                    plugin = command[2]
+                    self.unload_plugin(plugin)
+                    msg = 'plugin ' + plugin + ' successfully unloaded' 
+                    self.stream.send(Message(to=target, body=msg))
+                elif (command[0] == "reload" and command[1] == "plugin"):
+                    plugin = command[2]
+                    self.reload_plugin(plugin)
+                    msg = 'plugin ' + plugin + ' successfully reloaded' 
+                    self.stream.send(Message(to=target, body=msg))
+                elif (command[0] == "reload" and command[1] == "config"):
+                    self.read_cfg()
+                    self.stream.send(Message(to=target, 
+                        body=u'config reloaded'))
+                    for plugin in self.plugins.values():
+                        try:
+                            plugin.read_cfg()
+                        except StandardError:
+                            self.print_exception()
+                            self.info("Plugin call failed")
+                elif (command[0] == "load" and command[1] == "plugin"):
+                    plugin = command[2]
+                    self.load_plugin(plugin)
+                    self.get_plugin(plugin).session_started(self.stream)
+                    msg = 'plugin ' + plugin + ' successfully loaded' 
+                    self.stream.send(Message(to=target, body=msg))
+                elif (command[0] == "help"):
+                    msg = self.help()
+                    self.stream.send(Message(to=target, body=msg))
                 else:
                     self.plugins_message_chat(stanza)
                 
@@ -294,6 +295,15 @@ class Application(jabber.Client):
             self.info("Authorized as %s." % (arg,))
         elif state == "tls connecting":
             self.info("Doing TLS handhake with %s." % (arg,))
+    
+    def help(self):
+        """
+        Return help message.
+        """
+        cmd_file = open(self.base_dir + '/COMMANDS')
+        commands = cmd_file.read()
+        cmd_file.close()
+        return unicode(commands, 'iso-8859-2')
     
     def error(self, error_text):
         """

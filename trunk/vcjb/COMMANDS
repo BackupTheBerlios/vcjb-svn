@@ -1,15 +1,13 @@
 Available commands:
 
+help
 down
 reload config
+unload plugin plugin_name
+reload plugin plugin_name
+load plugin plugin_name
 
-unload plugin pluginname
-reload plugin pluginname
-load plugin pluginname
-
-PLUGIN
-
-plugin_name log repo_name [revision_number]
+plugin_name log repo_name [revision]
 plugin_name info
 plugin_name info repo_name
 plugin_name modify repo_name add user_name 
