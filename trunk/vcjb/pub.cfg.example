@@ -1,0 +1,7 @@
+[LOGIN]
+resource = publish
+auth_methods = sasl:DIGEST-MD5 digest
+host = chrome.pl
+user = vcjb
+pass = aaa
+vcjb_resource = vcjb

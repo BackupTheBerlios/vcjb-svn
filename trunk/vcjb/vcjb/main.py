@@ -197,6 +197,7 @@ class Application(jabber.Client):
         presence.set_priority(20);
         self.stream.send(presence)
         self.stream.set_message_handler("chat", self.message_chat)
+        self.stream.set_message_handler("normal", self.plugins_message_normal)
         
         for plugin in self.plugins.values():
             try:
@@ -269,6 +270,19 @@ class Application(jabber.Client):
             except StandardError:
                 self.print_exception()
                 self.info("Plugin call failed")
+    
+    def plugins_message_normal(self, stanza):
+        """
+        Call plugin handler for incomming normal message.
+        """ 
+        self.debug(u'Normal message from %r ' % (stanza.get_from()))
+        for plugin in self.plugins.values():
+            try:
+                plugin.message_normal(stanza)
+            except StandardError:
+                self.print_exception()
+                self.info("Plugin call failed")
+    
     def print_exception(self):
         """
         Print exception.

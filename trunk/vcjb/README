@@ -1,8 +1,14 @@
 About:
-This is a smiple Jabber bot that checking Version Controll system for new 
+This is a smiple Jabber bot that checking Version Control system for new 
 revisions and sending log info by jabber.
 In this time VCJB is serving only SVN repositories, but everyone may create 
-plugin for other Version Controll systems.
+plugin for other Version Control systems.
+Plugin PUB with class publishApplication serving messages sending by VC 
+after commit changes. It can serve any VC system.
+For example for CVS repositories you only need to modify
+file publish.py and run it CVSROOT/loginfo.
+In the future publishApplication class will serve Publish-Subscribe 
+(http://www.jabber.org/jeps/jep-0060.html).
 
 Requirements:
 Python 2.3 (http://www.python.org)

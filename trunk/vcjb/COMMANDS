@@ -7,11 +7,12 @@ unload plugin plugin_name
 reload plugin plugin_name
 load plugin plugin_name
 
-plugin_name log repo_name [revision]
+plugin_name log repo_name [revision] (not work with pub plugin)
 plugin_name info
 plugin_name info repo_name
 plugin_name modify repo_name add user_name 
-plugin_name modify repo_name url new_url
+plugin_name modify repo_name url new_url (not work with pub plugin)
 plugin_name modify repo_name del user_name 
 plugin_name del repo_name
-plugin_name add repo_name url
+plugin_name add repo_name (work with pub plugin)
+plugin_name add repo_name url (work with other plugins)
